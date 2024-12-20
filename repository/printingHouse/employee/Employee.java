@@ -1,9 +1,9 @@
 package employee;
 
 public class Employee {
-	private String name;
+	protected String name;
 	protected static int salary = 30;
-	
+
 
 	public Employee() {
 			this.name = "Unnamed Employee";
@@ -12,17 +12,28 @@ public class Employee {
 	public Employee(String name) {
 		this.name = name;
 	}
-	
-	
-	public static int getSalary() {
-		return Employee.salary;
+
+
+	public String getName() {
+		return name;
 	}
 
-	
-	
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public static int getSalary() {
+		return salary;
+	}
+
+	public static void setSalary(int salary) {
+		Employee.salary = salary;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Employee name: " + this.name + 
-				" Employee salary: " + Employee.salary;
+				" Employee salary: " + this.salary;
 	}
 }

@@ -1,24 +1,19 @@
 package main;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.EnumMap;
-import java.io.*;
-
 import printHouse.*;
-import employee.*;
 import printer.*;
 import paper.*;
-
-
-
+import printer.exception.CannotColorPrintException;
+import printer.exception.IncompatiblePaperException;
+import printer.exception.InsufficientPaperException;
+import printer.exception.PaperCapacityOverloadException;
 
 
 public class Main {
 	
 	public static void main(String args[]) 
-			throws PaperCapacityOverloadException, IncompatiblePaperException, 
-			CannotColorPrintException, InsufficientPaperException {
+			throws PaperCapacityOverloadException, IncompatiblePaperException,
+            CannotColorPrintException, InsufficientPaperException {
 		
 		
 		/*

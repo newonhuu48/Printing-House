@@ -3,6 +3,9 @@ package printer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import paper.*;
+import printer.exception.CannotColorPrintException;
+import printer.exception.IncompatiblePaperException;
+import printer.exception.InsufficientPaperException;
 
 //COMPLETE IT
 public class Printer {
@@ -10,10 +13,10 @@ public class Printer {
 	private boolean canColorPrint;
 	private int totalPagesPrinted;
 	
-	paperType loadedType = null;
-	paperSize loadedSize = null;
+	private paperType loadedType = null;
+	private paperSize loadedSize = null;
 	
-	int loadedPaper = 0;
+	private int loadedPaper = 0;
 	public static final int maxLoadedPaper = 700;
 	
 	

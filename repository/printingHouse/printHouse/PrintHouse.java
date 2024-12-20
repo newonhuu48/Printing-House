@@ -7,36 +7,37 @@ import java.util.ArrayList;
 import paper.*;
 import employee.*;
 import printer.*;
-
+import printer.exception.CannotColorPrintException;
+import printer.exception.IncompatiblePaperException;
+import printer.exception.InsufficientPaperException;
+import printer.exception.PaperCapacityOverloadException;
 
 
 public class PrintHouse {
 	private String name;
 	
 	//Demn inflation :)
-	public final static double costToPriceRatio = 4.25;
-	public final static double copiesDiscount = 0.8;
-	public final static int copiesForDiscount = 10;
-	
+	private double costToPriceRatio = 4.25;
+	private double copiesDiscount = 0.8;
+	private int copiesForDiscount = 10;
+
 	
 	//managerBonus
 	//This variable is also contained in Manager class
 	//I couldn't figure out a good way to link
 	//So they are both UNSYNCHRONIZED in PrintHouse and Manager classes
-	public final static double managerBonus = 1.25;
-	public final static double incomeForManagerBonus = 150;
+	private double managerBonus = 1.25;
+	private double incomeForManagerBonus = 150;
 	
 	
-	double income = 0.0;
-	double expenses = 0.0;
+	private double income = 0.0;
+	private double expenses = 0.0;
 	
-	
-	
+
 	//AVAILABLE PAPER MULTIKEY MAP
-	EnumMap<paperType, EnumMap<paperSize, Integer> > availablePaper = 
+	private EnumMap<paperType, EnumMap<paperSize, Integer> > availablePaper =
 			new EnumMap<>(paperType.class);
-	
-	
+
 	//NEVER use this
 	//It is just used to initialize availablePaper Nested EnumMap
 	private EnumMap<paperSize, Integer> innerMap = new EnumMap<>(paperSize.class);
@@ -44,16 +45,20 @@ public class PrintHouse {
 	
 	
 	//LISTS OF EMPLOYEES AND PRINTERS
-	ArrayList<Employee> employees = new ArrayList<Employee>();
-	ArrayList<Manager> managers = new ArrayList<Manager>();
-	ArrayList<Printer> printers = new ArrayList<Printer>();
+	private ArrayList<Employee> employees = new ArrayList<Employee>();
+	private ArrayList<Manager> managers = new ArrayList<Manager>();
+	private ArrayList<Printer> printers = new ArrayList<Printer>();
 	
 	
 	//PAPER COSTS BY TYPE AND SIZE
 	EnumMap<paperType, Double> typeCost = 
 			new EnumMap<paperType, Double>(paperType.class);
+
 	EnumMap<paperSize, Double> sizeCost = 
 			new EnumMap<paperSize, Double>(paperSize.class);
+
+
+
 
 	
 	//THREE CONSTRUCTORS
@@ -93,6 +98,109 @@ public class PrintHouse {
 		fillAvailablePaper();
 	}
 
+
+	//===================
+	//GETTERS AND SETTERS
+	//===================
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public double getCostToPriceRatio() {
+		return costToPriceRatio;
+	}
+	public void setCostToPriceRatio(double costToPriceRatio) {
+		this.costToPriceRatio = costToPriceRatio;
+	}
+
+	public double getCopiesDiscount() {
+		return copiesDiscount;
+	}
+	public void setCopiesDiscount(double copiesDiscount) {
+		this.copiesDiscount = copiesDiscount;
+	}
+
+	public int getCopiesForDiscount() {
+		return copiesForDiscount;
+	}
+	public void setCopiesForDiscount(int copiesForDiscount) {
+		this.copiesForDiscount = copiesForDiscount;
+	}
+
+	public double getManagerBonus() {
+		return managerBonus;
+	}
+	public void setManagerBonus(double managerBonus) {
+		this.managerBonus = managerBonus;
+	}
+
+	public double getIncomeForManagerBonus() {
+		return incomeForManagerBonus;
+	}
+	public void setIncomeForManagerBonus(double incomeForManagerBonus) {
+		this.incomeForManagerBonus = incomeForManagerBonus;
+	}
+
+	public double getIncome() {
+		return income;
+	}
+	public void setIncome(double income) {
+		this.income = income;
+	}
+
+	public double getExpenses() {
+		return expenses;
+	}
+	public void setExpenses(double expenses) {
+		this.expenses = expenses;
+	}
+
+	public EnumMap<paperType, EnumMap<paperSize, Integer>> getAvailablePaper() {
+		return availablePaper;
+	}
+	public void setAvailablePaper(EnumMap<paperType, EnumMap<paperSize, Integer>> availablePaper) {
+		this.availablePaper = availablePaper;
+	}
+
+	public ArrayList<Employee> getEmployees() {
+		return employees;
+	}
+	public void setEmployees(ArrayList<Employee> employees) {
+		this.employees = employees;
+	}
+
+	public ArrayList<Manager> getManagers() {
+		return managers;
+	}
+	public void setManagers(ArrayList<Manager> managers) {
+		this.managers = managers;
+	}
+
+	public ArrayList<Printer> getPrinters() {
+		return printers;
+	}
+	public void setPrinters(ArrayList<Printer> printers) {
+		this.printers = printers;
+	}
+
+	public EnumMap<paperType, Double> getTypeCost() {
+		return typeCost;
+	}
+	public void setTypeCost(EnumMap<paperType, Double> typeCost) {
+		this.typeCost = typeCost;
+	}
+
+	public EnumMap<paperSize, Double> getSizeCost() {
+		return sizeCost;
+	}
+	public void setSizeCost(EnumMap<paperSize, Double> sizeCost) {
+		this.sizeCost = sizeCost;
+	}
+
+
 	//Size cost is always the same
 	//So fill it to avoid writing duplicate code
 	private void fillSizeCost() {
@@ -108,7 +216,6 @@ public class PrintHouse {
 		for(paperSize size : paperSize.values()) {
 			innerMap.put(size, 0);
 		}
-		
 		
 		//Attach Inner Map to Outer Map
 		for(paperType type : paperType.values() ) {
@@ -129,7 +236,7 @@ public class PrintHouse {
 	
 	//Load paper into printer
 	public void loadPaper(Printer pr, paperType type, paperSize size, int amount)
-			throws PaperCapacityOverloadException, IncompatiblePaperException  {
+			throws PaperCapacityOverloadException, IncompatiblePaperException {
 		
 		if(pr.getLoadedType() == null && pr.getLoadedSize() == null ) {
 			pr.setLoadedType(type);
@@ -179,15 +286,15 @@ public class PrintHouse {
 	
 	
 	
-	public void publish(Publication pub, Printer pr, int copies, boolean isColorPrint) 
+	public void publish(Publication publication, Printer printer, int copies, boolean isColorPrint)
 			throws CannotColorPrintException, IncompatiblePaperException, InsufficientPaperException {
 		
-		paperType type = pub.getType();
-		paperSize size = pub.getSize();
-		int pages = pub.getPages();
+		paperType type = publication.getType();
+		paperSize size = publication.getSize();
+		int pages = publication.getPages();
 		
 		
-		pr.print(pub, copies, isColorPrint);
+		printer.print(publication, copies, isColorPrint);
 		
 		
 		//Discount check
@@ -200,9 +307,7 @@ public class PrintHouse {
 			income += typeCost.get(type) * sizeCost.get(size) * pages * copies * costToPriceRatio;
 		}
 	}
-	
-	
-	
+
 	
 	//Always call after done publishing
 	//To give salaries
@@ -252,23 +357,19 @@ public class PrintHouse {
 		
 	}
 	
-	
-	//TODO
-	//Implement writing to a file
-	//Serialization
-	//And the opposite
-	//Deserialization
+
+	//SERIALIZATION
+	//DESERIALIZATION
 	public void serialize(String name) {
 		String filename = name + ".ser";
 		
-		try {
-			FileOutputStream file = new FileOutputStream(filename);
-			ObjectOutputStream out = new ObjectOutputStream(file);
+		try(
+				FileOutputStream file = new FileOutputStream(filename);
+				ObjectOutputStream out = new ObjectOutputStream(file)
+		)
+		{
 			
 			out.writeObject(this);
-			
-			out.close();
-			file.close();
 			
 			System.out.println("File serialization successful.");
 			
@@ -282,18 +383,13 @@ public class PrintHouse {
 	public PrintHouse deserialize(String name) {
 		String filename = name + ".ser";
 		
-		try {
-			FileInputStream file = new FileInputStream(filename);
-			ObjectInputStream in = new ObjectInputStream(file);
-			
-			
+		try(FileInputStream file = new FileInputStream(filename);
+			ObjectInputStream in = new ObjectInputStream(file)
+		)
+		{
+
 			PrintHouse ph1 = (PrintHouse) in.readObject();
-			
-			
-			in.close();
-			file.close();
-			
-			
+
 			return ph1;
 			
 		} catch(IOException ex) {
